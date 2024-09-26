@@ -67,4 +67,4 @@ jobs:
         with:
           app-name: 'AI-chatbot-streamlit'
           slot-name: 'Production'
-          package: '.'  # Ensure the current directory is used for deployment
+          package: './release.zip'  # Ensure the current directory is used for deployment
