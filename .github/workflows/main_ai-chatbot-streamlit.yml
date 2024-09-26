@@ -22,13 +22,10 @@ jobs:
         with:
           python-version: '3.9'  # Use the appropriate Python version
 
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-      
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
@@ -62,7 +59,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-         creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
          
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -70,3 +67,4 @@ jobs:
         with:
           app-name: 'AI-chatbot-streamlit'
           slot-name: 'Production'
+          package: '.'  # Ensure the current directory is used for deployment
