@@ -211,6 +211,19 @@ def create_prompt(user_question):
             """
     return prompt, results
 
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            /* Optional: Customize background color */
+            .reportview-container {
+                background-color: white;
+            }
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 def main():
     st.title(":speech_balloon: AI-Powered Chatbot for Document Querying")
 
