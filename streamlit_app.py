@@ -225,7 +225,7 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 def main():
-    st.title(":speech_balloon: AI-Powered Chatbot for Document Querying")
+    st.title(":speech_balloon: Hello! I am your AI Chatbot, How can I assist you today?")
 
     init_session_state()
     init_service_metadata()
