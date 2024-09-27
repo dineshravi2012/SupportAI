@@ -25,9 +25,9 @@ def get_snowflake_session():
         snowpark_session = Session.builder.configs(connection_parameters).create()
     return snowpark_session 
 
-MODELS = [
-    "mistral-large",
+MODELS = [   
     "snowflake-arctic",
+    "mistral-large",
     "llama3-70b",
     "llama3-8b",
 ]
@@ -39,7 +39,7 @@ def init_session_state():
     if 'clear_conversation' not in st.session_state:
         st.session_state.clear_conversation = False
     if 'model_name' not in st.session_state:
-        st.session_state.model_name = 'mistral-large'  # Change this to your model name
+        st.session_state.model_name = 'snowflake-arctic'  # Change this to your model name
 
 def init_messages():
     """Initialize the session state for chat messages."""
