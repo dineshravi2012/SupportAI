@@ -32,6 +32,8 @@ MODELS = [
     "llama3-8b",
 ]
 
+
+
 def init_session_state():
     """Initialize session state variables."""
     if 'messages' not in st.session_state:
@@ -94,7 +96,7 @@ def init_config_options():
             max_value=10,
         )
 
-    st.sidebar.expander("Session State").write(st.session_state)
+    # st.sidebar.expander("Session State").write(st.session_state)
 
 def query_cortex_search_service(query, columns=[], filter={}):
     """Query the selected cortex search service."""
@@ -259,14 +261,14 @@ def main():
                 generated_response = complete(
                     st.session_state.model_name, prompt
                 )
-                # Build references table for citation
-                markdown_table = "###### References \n\n| Title | URL |\n|-------|-----|\n"
-                for ref in results:
-                    markdown_table += f"| {ref['relative_path']} | [Link]({ref['file_url']}) |\n"
+                # # Build references table for citation
+                # markdown_table = "###### References \n\n| Title | URL |\n|-------|-----|\n"
+                # for ref in results:
+                #     markdown_table += f"| {ref['relative_path']} | [Link]({ref['file_url']}) |\n"
 
                 if results:
-                    st.markdown(markdown_table)
-                message_placeholder.markdown(generated_response.replace("$", "\$"))
+                #     st.markdown(markdown_table)
+                 message_placeholder.markdown(generated_response.replace("$", "\$"))
 
             # Add assistant message to chat history
             st.session_state.messages.append({"role": "assistant", "content": generated_response})
