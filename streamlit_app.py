@@ -1,4 +1,4 @@
-import streamlit as st
+eimport streamlit as st
 from snowflake.core import Root  # Requires snowflake>=0.8.0
 from snowflake.cortex import Complete
 from snowflake.snowpark.context import get_active_session
@@ -227,7 +227,7 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 def main():
-    st.title(":speech_balloon: Hello! I am your AI Chatbot, How can I assist you today?")
+    st.title(":speech_balloon: Hello! Welcome to Support AI, How can I assist you today?")
 
     init_session_state()
     init_service_metadata()
