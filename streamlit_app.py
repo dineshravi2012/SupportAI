@@ -1,4 +1,4 @@
-eimport streamlit as st
+import streamlit as st
 from snowflake.core import Root  # Requires snowflake>=0.8.0
 from snowflake.cortex import Complete
 from snowflake.snowpark.context import get_active_session
