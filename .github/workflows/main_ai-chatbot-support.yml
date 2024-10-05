@@ -1,4 +1,8 @@
-name: Build and Deploy Python App to Azure Web App - AI-Chatbot-Support
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
+
+name: Build and deploy Python app to Azure Web App - AI-Chatbot-Support
 
 on:
   push:
@@ -11,29 +15,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python 3.8
+      - name: Set up Python version
         uses: actions/setup-python@v5
         with:
-          python-version: '3.8'
-
-      - name: Create and activate virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          python -m pip install --upgrade pip
+          python-version: '3.9'  # Use the appropriate Python version
 
       - name: Install dependencies
         run: |
-          source venv/bin/activate
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
+        
+      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
-        run: |
-          source venv/bin/activate
-          zip -r release.zip . -x "venv/*" "*.git/*" "*.github/*" "__pycache__/*" "release.zip"
+        run: zip -r release.zip . -x "venv/*"  # Exclude the virtual environment
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -59,25 +56,15 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Login to Azure
-        uses: azure/login@v2
+      - name: Azure Login
+        uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_55DCF358BF524D3081F17D6CDB82D556 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_265697F31B3847B080484426B7E2E8B8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3368265CC0CF497F8030D8C74694479E }}
-
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+         
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'AI-Chatbot-Support'  # Ensure exact match
+          app-name: 'AI-Chatbot-Support'
           slot-name: 'Production'
-          package: './release.zip'
-
-      - name: Restart Azure Web App
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az webapp restart --name AI-Chatbot-Support --resource-group AI-Chatbot_group
-        env:
-          AZURE_SUBSCRIPTION: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3368265CC0CF497F8030D8C74694479E }}
+          package: './release.zip'  # Ensure the current directory is used for deployment
