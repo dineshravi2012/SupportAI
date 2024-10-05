@@ -30,12 +30,6 @@ jobs:
           source venv/bin/activate
           pip install -r requirements.txt
 
-      - name: Run tests (optional)
-        run: |
-          source venv/bin/activate
-          # Example: pytest
-          pytest
-
       - name: Zip artifact for deployment
         run: |
           source venv/bin/activate
@@ -84,6 +78,6 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az webapp restart --name AI-Chatbot-Support --resource-group <Your-Resource-Group>
+            az webapp restart --name AI-Chatbot-Support --resource-group AI-Chatbot_group
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3368265CC0CF497F8030D8C74694479E }}
