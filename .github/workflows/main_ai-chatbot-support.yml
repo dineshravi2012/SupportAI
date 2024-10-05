@@ -62,16 +62,17 @@ jobs:
         run: unzip release.zip
 
       
-      - name: Azure Login
-        uses: azure/login@v1
+      - name: Login to Azure
+        uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_55DCF358BF524D3081F17D6CDB82D556 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_265697F31B3847B080484426B7E2E8B8 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3368265CC0CF497F8030D8C74694479E }}
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
           app-name: 'AI-Chatbot-Support'
           slot-name: 'Production'
-          package: './release.zip' 
           
