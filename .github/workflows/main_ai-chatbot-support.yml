@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - AI-chatbot-Support
+name: Build and Deploy Python App to Azure Web App - AI-chatbot-Support
 
 on:
   push:
@@ -26,11 +26,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-        
+
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
+      - name: List files before zipping
+        run: ls -la
+
       - name: Zip artifact for deployment
-        run: zip -r release.zip . -x "venv/*"  # Exclude the virtual environment
+        run: |
+          zip -r release.zip . -x "venv/*" "*.git/*" "*.github/*" "__pycache__/*" "release.zip"
+
+      - name: List zip contents
+        run: unzip -l release.zip
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -53,18 +60,24 @@ jobs:
         with:
           name: python-app
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
+      # Removed the unzip step
 
       - name: Azure Login
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-         
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'AI-chatbot-Support'
-          slot-name: 'Production'
-          package: './release.zip'  # Ensure the current directory is used for deployment
+          app-name: 'AI-chatbot-Support'    # Ensure exact match with Azure Web App name
+          package: './release.zip'         # Deploy the ZIP directly
+
+      - name: Restart Azure Web App
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az webapp restart --name AI-chatbot-Support --resource-group AI-chatbot-ResourceGroup
+        env:
+          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
