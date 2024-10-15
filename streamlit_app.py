@@ -148,55 +148,47 @@ icons = {
 #     "user": "🙋‍♀️"       # Person Raising Hand (Female)
 # }
 
-
-# Global variables to hold the Snowpark session and Root
+# Global variable to hold the Snowpark session
 snowpark_session = None
-root = None
 
 def get_snowflake_session():
     # Access credentials from Streamlit secrets
-    snowflake_credentials = st.secrets["SF_Dinesh2012"]
-    global snowpark_session, root
+    # snowflake_credentials = st.secrets["SF_Dinesh2012"]
+    # global snowpark_session
+    # if snowpark_session is None:
+        # # Create Snowpark session
+        # connection_parameters = {
+            # "account": snowflake_credentials["account"],
+            # "user": snowflake_credentials["user"],
+            # "password": snowflake_credentials["password"],
+            # "warehouse": snowflake_credentials["warehouse"],
+            # "database": snowflake_credentials["database"],
+            # "schema": snowflake_credentials["schema"]
+        # }
+        # snowpark_session = Session.builder.configs(connection_parameters).create()
+    # return snowpark_session 
+
+# Access credentials from environment variables
+    snowflake_credentials = {
+        "account": os.getenv("SF_Dinesh2012_ACCOUNT"),
+        "user": os.getenv("SF_Dinesh2012_USER"),
+        "password": os.getenv("SF_Dinesh2012_PASSWORD"),
+        "warehouse": os.getenv("SF_Dinesh2012_WAREHOUSE"),
+        "database": os.getenv("SF_Dinesh2012_DATABASE"),
+        "schema": os.getenv("SF_Dinesh2012_SCHEMA")
+    }
+
+# Validate that all credentials are present
+    missing_keys = [key for key, value in snowflake_credentials.items() if not value]
+    if missing_keys:
+        st.error(f"Missing Snowflake credentials: {', '.join(missing_keys)}")
+        st.stop()  # Stop execution if credentials are missing
+
+    global snowpark_session
     if snowpark_session is None:
-        try:
-            # Create Snowpark session
-            connection_parameters = {
-                "account": snowflake_credentials["account"],
-                "user": snowflake_credentials["user"],
-                "password": snowflake_credentials["password"],
-                "warehouse": snowflake_credentials["warehouse"],
-                "database": snowflake_credentials["database"],
-                "schema": snowflake_credentials["schema"]
-            }
-            snowpark_session = Session.builder.configs(connection_parameters).create()
-            root = Root(snowpark_session)  # Create the Root object
-        except Exception as e:
-            st.error(f"Failed to create Snowflake session: {e}")
-            st.stop()
-    return snowpark_session 
-
-#     global snowpark_session
-# # Access credentials from environment variables
-#     snowflake_credentials = {
-#         "account": os.getenv("SF_Dinesh2012_ACCOUNT"),
-#         "user": os.getenv("SF_Dinesh2012_USER"),
-#         "password": os.getenv("SF_Dinesh2012_PASSWORD"),
-#         "warehouse": os.getenv("SF_Dinesh2012_WAREHOUSE"),
-#         "database": os.getenv("SF_Dinesh2012_DATABASE"),
-#         "schema": os.getenv("SF_Dinesh2012_SCHEMA")
-#     }
-
-# # Validate that all credentials are present
-#     missing_keys = [key for key, value in snowflake_credentials.items() if not value]
-#     if missing_keys:
-#         st.error(f"Missing Snowflake credentials: {', '.join(missing_keys)}")
-#         st.stop()  # Stop execution if credentials are missing
-
-#     global snowpark_session
-#     if snowpark_session is None:
-#         # Create Snowpark session
-#         snowpark_session = Session.builder.configs(snowflake_credentials).create()
-#     return snowpark_session
+        # Create Snowpark session
+        snowpark_session = Session.builder.configs(snowflake_credentials).create()
+    return snowpark_session
 
 # Define available models (can be set to a default)
 DEFAULT_MODEL = "mistral-large"
@@ -459,7 +451,6 @@ def main():
 
 # Execute the app
 if __name__ == "__main__":
-    # Establish the Snowflake session
-    get_snowflake_session()
-    # Run the main function
+    session = get_snowflake_session()
+    root = Root(session)
     main()
