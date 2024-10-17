@@ -74,7 +74,7 @@ st.markdown(
     .assistant-message {
         background: #FFFFFF 0% 0% no-repeat padding-box;
         box-shadow: -1px 1px 10px #E2E2E229;
-        border: 0.5px solid #EAEAEA;
+        border: 0.5px solid #dbd1d1;;
         border-radius: 0px 10px 10px 10px;
         opacity: 1;
         padding: 10px;
